@@ -1,0 +1,126 @@
+<!DOCTYPE html> {%load staticfiles%}
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Spotify Player</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous" />
+    <link rel="icon" type="image/png" sizes="16x16" href="{% static 'favicon/favicon(1).ico' %}" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Alata&family=Russo+One&display=swap" rel="stylesheet">
+    <!-- JS, Popper.js, and jQuery -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
+</head>
+<style>
+    .container {
+        width: auto;
+        margin: 0px auto;
+        padding: 30px;
+        color: white;
+        font-family: 'Alata';
+    }
+    
+    h1 {
+        text-align: center;
+    }
+    
+    h3 {
+        font-family: 'Alata', sans-serif;
+    }
+    
+    form {
+        background: black;
+    }
+    
+    .l1 {
+        background: #121212;
+        color: white;
+    }
+</style>
+
+<body>
+    <form method="POST">
+        <div class="form-group container">
+            <h3>
+                <strong><span
+              ><i
+                class="fa fa-spotify"
+                style="font-size: 48px; color: green; padding: 10px"
+              ></i
+              >Top 20 tracks of your favourite Artists</span
+            ></strong
+          >
+        </h3>
+        {%csrf_token%}
+        <label>Enter Artist/Song Name </label>
+        <input
+          name="uri"
+          class="form-control"
+          type="text"
+          placeholder="Artist/Song Name"
+        />
+        <br />
+        <input
+          type="submit"
+          value="Search"
+          class="btn btn-outline-primary btn-lg"
+        />
+      </div>
+    </form>
+    {%if results %}
+    <div class="jumbotron">
+      {%for i in results%}
+      <ul class="list-group">
+        <li class="list-group-item l1">
+          <h3 style="text-align: center; font-family: Alata;">{{i.name}}</h3>
+        </li>
+        <!--li class="list-group-item">
+          <h3>{{i.items}}</h3>
+        </li-->
+        <li class="list-group-item">
+          <img src="{{i.album.images.0.url}}" class="img-fluid img-thumbnail" />
+        </li>
+          {%if i.preview_url is None%}
+          <li class="list-group-item">
+            <a href="{{i.external_urls.spotify}}" style="font-size:40px; font-family: 'Alata';" target="_blank"><i class="fa fa-play" style="font-size:40px; color: black;" aria-hidden="true"></i>
+              Play</a>
+          {%else%}
+          <li class="list-group-item">
+            <audio controls>
+              <source src="{{i.preview_url}}" />
+            </audio>
+          </li>
+          {%endif%}
+      </ul>
+      {%endfor%}
+    </div>
+    {%else%}
+    <div class="jumbotron">
+        {%for x in result%}
+        <ul class="list-group">
+          <li class="list-group-item l1">
+            <h2 style="text-align: center">{{x.name}}</h2>
+          </li>
+          <li class="list-group-item">
+            <img src="{{x.album.images.0.url}}" class="img-fluid img-thumbnail" />
+          </li>
+          <li class="list-group-item">
+            <audio controls>
+              <source src="{{x.preview_url}}" />
+            </audio>
+          </li>
+        </ul>
+        {%endfor%}
+    {%endif%}
+    <div>
+    <h3 style="text-align: center; font-weight: bold;">
+      Made with
+      <i class="fa fa-heart" style="color: red" aria-hidden="true"></i> by
+      Deepak Shakya
+    </h3>
+    </div>
+  </body>
+</html>
